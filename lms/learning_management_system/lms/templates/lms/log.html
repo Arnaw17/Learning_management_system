@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - LearnCode</title>
+<link rel="stylesheet" href="{% static 'css/log.css' %}">
+
+</head>
+<body>
+
+<div class="container">
+  <h2>Login to LearnCode</h2>
+  {% if messages %}
+    <div class="messages">
+      {% for message in messages %}
+        <div class="message {{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  <form id="loginForm" method="post" action="{% url 'student_login' %}">
+    {% csrf_token %}
+    {% if form %}
+      {{ form.non_field_errors }}
+      <div class="input-group">
+        {{ form.email.label_tag }}
+        {{ form.email }}
+        {{ form.email.errors }}
+      </div>
+      <div class="input-group">
+        {{ form.password.label_tag }}
+        {{ form.password }}
+        {{ form.password.errors }}
+      </div>
+    {% else %}
+      <div class="input-group">
+        <label>Email</label>
+        <input type="email" name="email" placeholder="example@gmail.com" required>
+      </div>
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Enter password" required>
+      </div>
+    {% endif %}
+    <button type="submit" class="btn">Login</button>
+  </form>
+  <div class="links">
+    <p>Don’t have an account? <a href="{% url 'student_register' %}">Register</a></p>
+    <p><a href="{% url 'home' %}">Back to Home</a></p>
+  </div>
+</div>
+
+</body>
+</html>
