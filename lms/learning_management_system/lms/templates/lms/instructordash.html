@@ -32,6 +32,12 @@
                                         <span class="notification-icon">🔔</span>
                                         <img src="{% static 'css/User profile.jpg' %}" alt="User Avatar" class="avatar">
                                 </div>
+                <div class="logout-action">
+                    <form method="post" action="{% url 'logout_view' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn logout-btn">Logout</button>
+                    </form>
+                </div>
                         </header>
 
                         {% if messages %}

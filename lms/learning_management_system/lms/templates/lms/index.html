@@ -128,22 +128,32 @@
         <li><a href="#support">Support</a></li>
         <li>
           <ul class="log">
-
+      {% if user.is_authenticated %}
+        <li class="dropdown">
+          <a href="#">
+            <img src="{% static 'css/User profile.jpg' %}" alt="avatar" style="width:28px;height:28px;border-radius:50%;vertical-align:middle;margin-right:8px;">{{ user.first_name|default:user.username }} ▾
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="{% url 'logout_view' %}">Logout</a></li>
+          </ul>
+        </li>
+      {% else %}
       <li class="dropdown">
       <a href="#">Login ▾</a>
       <ul class="dropdown-menu">
         <li><a href="{% url 'student_login' %}">Login as Student</a></li>
         <li><a href="{% url 'instructor_login' %}">Login as Instructor</a></li>
       </ul>
-    </li></li>
-        <li><li class="dropdown">
+    </li>
+        <li class="dropdown">
       <a href="#">Register ▾</a>
       <ul class="dropdown-menu">
         <li><a href="{% url 'student_register' %}">Register as Student</a></li>
         <li><a href="{% url 'instructor_register' %}">Register as Instructor</a></li>
       </ul>
-    </li></li>
-
+    </li>
+      {% endif %}
+    </li>
       </ul>
     </nav>
   </header>

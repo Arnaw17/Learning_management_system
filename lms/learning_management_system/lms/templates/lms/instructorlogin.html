@@ -35,6 +35,9 @@
           {{ form.password }}
           {{ form.password.errors }}
         </div>
+        <div class="input-group">
+          {{ form.remember_me }} <label for="id_remember_me">Remember me</label>
+        </div>
       {% else %}
         <div class="input-group">
           <label for="email">Email Address</label>
@@ -44,6 +47,9 @@
           <label for="password">Password</label>
           <input type="password" id="password" name="password" placeholder="Enter your password" required />
         </div>
+        <div class="input-group">
+          <input type="checkbox" name="remember_me" id="remember_me"> <label for="remember_me">Remember me</label>
+        </div>
       {% endif %}
 
       <button type="submit" class="login-btn">Login</button>
@@ -51,6 +57,28 @@
   </div>
 </div>
 
+  <!-- Debug helper: prints document cookies and the hidden CSRF token input value to console -->
+    <!-- <div id="csrf-debug" style="position:fixed;right:12px;bottom:12px;background:#fff;border:1px solid #ccc;padding:8px;font-size:12px;z-index:9999;max-width:320px;">
+      <strong>CSRF debug</strong>
+      <div id="csrf-debug-cookie">Cookies: (checking...)</div>
+      <div id="csrf-debug-input">CSRF input present: (checking...)</div>
+      <div id="csrf-debug-value">CSRF value: (checking...)</div>
+    </div> -->
 
-</body>
-</html>
+    <script>
+      try {
+        const cookieText = document.cookie || '(no cookies)';
+        const csrfInput = document.querySelector('input[name="csrfmiddlewaretoken"]');
+        document.getElementById('csrf-debug-cookie').innerText = 'Cookies: ' + cookieText;
+        document.getElementById('csrf-debug-input').innerText = 'CSRF input present: ' + (!!csrfInput);
+        document.getElementById('csrf-debug-value').innerText = 'CSRF value: ' + (csrfInput ? csrfInput.value : '(none)');
+        console.log('DOCUMENT COOKIE:', document.cookie);
+        console.log('CSRF hidden input present:', !!csrfInput);
+        console.log('CSRF token value (hidden input):', csrfInput ? csrfInput.value : null);
+      } catch (e) {
+        console.error('CSRF debug script error', e);
+      }
+    </script>
+
+  </body>
+  </html>

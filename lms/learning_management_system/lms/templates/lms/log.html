@@ -33,6 +33,9 @@
         {{ form.password }}
         {{ form.password.errors }}
       </div>
+      <div class="input-group">
+        {{ form.remember_me }} <label for="id_remember_me">Remember me</label>
+      </div>
     {% else %}
       <div class="input-group">
         <label>Email</label>
@@ -41,6 +44,9 @@
       <div class="input-group">
         <label>Password</label>
         <input type="password" name="password" placeholder="Enter password" required>
+      </div>
+      <div class="input-group">
+        <input type="checkbox" name="remember_me" id="remember_me"> <label for="remember_me">Remember me</label>
       </div>
     {% endif %}
     <button type="submit" class="btn">Login</button>

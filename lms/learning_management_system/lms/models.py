@@ -16,6 +16,8 @@ class InstructorProfile(models.Model):
 	user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='instructor_profile')
 	contact = models.CharField(max_length=20, blank=True)
 	expertise = models.CharField(max_length=200, blank=True)
+	instructor_id = models.CharField(max_length=32, unique=True, blank=True)
+	approved = models.BooleanField(default=False)
 	created_at = models.DateTimeField(auto_now_add=True)
 
 	def __str__(self):

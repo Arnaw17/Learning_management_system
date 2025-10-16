@@ -51,6 +51,20 @@
     {% endif %}
     <button type="submit" class="btn">Register</button>
   </form>
+  <script>
+    // Disable the submit button on first click to avoid double submissions
+    (function(){
+      const form = document.getElementById('registerForm');
+      if (!form) return;
+      const btn = form.querySelector('button[type="submit"]');
+      form.addEventListener('submit', function(e){
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = 'Registering...';
+        }
+      }, {once: true});
+    })();
+  </script>
   <div class="links">
     <p>Already have an account? <a href="{% url 'student_login' %}">Login</a></p>
     <p><a href="{% url 'home' %}">Back to Home</a></p>

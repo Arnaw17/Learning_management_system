@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import ensure_csrf_cookie
 from .models import StudentProfile, InstructorProfile
 from .forms import StudentRegistrationForm, InstructorRegistrationForm, LoginForm
 
@@ -12,12 +13,20 @@ def home(request):
 	return render(request, 'lms/index.html')
 
 
+@ensure_csrf_cookie
 def student_login(request):
 	if request.method == 'POST':
 		form = LoginForm(request.POST)
 		if form.is_valid():
 			user = form.cleaned_data['user']
+			remember = form.cleaned_data.get('remember_me')
 			login(request, user)
+			if remember:
+				# Two weeks
+				request.session.set_expiry(1209600)
+			else:
+				# Browser session
+				request.session.set_expiry(0)
 			return redirect('home')
 		else:
 			messages.error(request, form.errors.as_text())
@@ -31,22 +40,38 @@ def student_register(request):
 		form = StudentRegistrationForm(request.POST)
 		if form.is_valid():
 			user = form.save()
-			login(request, user)
-			return redirect('home')
+			messages.success(request, 'Registration successful. Please log in.')
+			return redirect('student_login')
 	else:
 		form = StudentRegistrationForm()
 	return render(request, 'lms/reg.html', {'form': form})
 
 
+@ensure_csrf_cookie
 def instructor_login(request):
 	if request.method == 'POST':
 		form = LoginForm(request.POST)
 		if form.is_valid():
 			user = form.cleaned_data['user']
-			if user.is_staff:
+			remember = form.cleaned_data.get('remember_me')
+			# Check for an InstructorProfile and whether it's approved by admin
+			profile = InstructorProfile.objects.filter(user=user).first()
+			if profile and profile.approved:
+				# Ensure the user has staff flag set so Django permissions work consistently
+				if not user.is_staff:
+					user.is_staff = True
+					user.save()
 				login(request, user)
+				if remember:
+					request.session.set_expiry(1209600)
+				else:
+					request.session.set_expiry(0)
 				return redirect('instructor_dashboard')
-			messages.error(request, 'You are not an instructor')
+			# Profile exists but not approved yet
+			if profile and not profile.approved:
+				messages.error(request, 'Your instructor account is pending admin approval.')
+			else:
+				messages.error(request, 'You are not an instructor or your instructor profile is missing')
 		else:
 			messages.error(request, form.errors.as_text())
 	else:
@@ -54,13 +79,14 @@ def instructor_login(request):
 	return render(request, 'lms/instructorlogin.html', {'form': form})
 
 
+@ensure_csrf_cookie
 def instructor_register(request):
 	if request.method == 'POST':
 		form = InstructorRegistrationForm(request.POST)
 		if form.is_valid():
 			user = form.save()
-			login(request, user)
-			return redirect('instructor_dashboard')
+			messages.success(request, 'Instructor registration successful. Please log in.')
+			return redirect('instructor_login')
 	else:
 		form = InstructorRegistrationForm()
 	return render(request, 'lms/instructorreg.html', {'form': form})

@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model, authenticate
 from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 from .models import StudentProfile, InstructorProfile
 
 User = get_user_model()
@@ -17,8 +18,11 @@ class StudentRegistrationForm(forms.Form):
 
     def clean_email(self):
         email = self.cleaned_data['email'].lower()
-        if User.objects.filter(username=email).exists():
-            raise ValidationError('A user with that email already exists')
+        # For student registration we must ensure the email is unused.
+        # If a user already exists with this email, block registration and show a clear message.
+        existing = User.objects.filter(username=email).first()
+        if existing:
+            raise ValidationError('A user with that email already exists. Try logging in instead.')
         return email
 
     def clean(self):
@@ -32,8 +36,12 @@ class StudentRegistrationForm(forms.Form):
     def save(self):
         data = self.cleaned_data
         email = data['email'].lower()
-        user = User.objects.create_user(username=email, email=email, password=data['password'],
-                                        first_name=data.get('first_name', ''), last_name=data.get('last_name', ''))
+        try:
+            user = User.objects.create_user(username=email, email=email, password=data['password'],
+                                            first_name=data.get('first_name', ''), last_name=data.get('last_name', ''))
+        except IntegrityError:
+            # Could happen if two requests race or validation was bypassed client-side
+            raise ValidationError('A user with that email already exists')
         StudentProfile.objects.create(user=user, contact=data.get('contact', ''), dob=data.get('dob', None))
         return user
 
@@ -63,17 +71,37 @@ class InstructorRegistrationForm(forms.Form):
     def save(self):
         data = self.cleaned_data
         email = data['email'].lower()
+        # If a user with this email already exists, authenticate with provided password
+        existing = User.objects.filter(username=email).first()
+        if existing:
+            # Verify password matches this user
+            auth_user = authenticate(username=email, password=data['password'])
+            if auth_user is None:
+                raise ValidationError('A user with that email already exists. Provide the correct password to attach instructor profile.')
+            # Ensure the user doesn't already have an instructor profile
+            if InstructorProfile.objects.filter(user=existing).exists():
+                raise ValidationError('An instructor profile for this user already exists')
+            import uuid
+            instructor_id = uuid.uuid4().hex[:12].upper()
+            InstructorProfile.objects.create(user=existing, contact=data.get('contact', ''), expertise=data.get('expertise', ''), instructor_id=instructor_id, approved=False)
+            return existing
+
+        # New user flow
         user = User.objects.create_user(username=email, email=email, password=data['password'],
                                         first_name=data.get('name', ''))
-        user.is_staff = True
+        # Keep is_staff False until admin approves
+        user.is_staff = False
         user.save()
-        InstructorProfile.objects.create(user=user, contact=data.get('contact', ''), expertise=data.get('expertise', ''))
+        import uuid
+        instructor_id = uuid.uuid4().hex[:12].upper()
+        InstructorProfile.objects.create(user=user, contact=data.get('contact', ''), expertise=data.get('expertise', ''), instructor_id=instructor_id, approved=False)
         return user
 
 
 class LoginForm(forms.Form):
     email = forms.EmailField(required=True)
     password = forms.CharField(widget=forms.PasswordInput, required=True)
+    remember_me = forms.BooleanField(required=False, initial=False)
 
     def clean(self):
         cleaned = super().clean()

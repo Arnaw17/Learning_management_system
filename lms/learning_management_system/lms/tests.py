@@ -37,5 +37,8 @@ class RegistrationTests(TestCase):
 		User = get_user_model()
 		user = User.objects.filter(username='instructor@example.com').first()
 		self.assertIsNotNone(user)
-		self.assertTrue(user.is_staff)
+		# Instructors are not staff until approved by admin
+		self.assertFalse(user.is_staff)
 		self.assertTrue(InstructorProfile.objects.filter(user=user).exists())
+		profile = InstructorProfile.objects.get(user=user)
+		self.assertFalse(profile.approved)

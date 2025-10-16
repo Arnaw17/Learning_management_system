@@ -74,3 +74,29 @@ h2 {
 .links a:hover {
   color: #0077ff;
 }
+
+/* Messages */
+.messages {
+  margin-bottom: 16px;
+}
+.message {
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+.message.error {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+.message.success {
+  background: #ecfccb;
+  color: #365314;
+  border: 1px solid #d9f99d;
+}
+
+/* Remember me checkbox layout */
+.input-group input[type="checkbox"] {
+  margin-right: 8px;
+}
