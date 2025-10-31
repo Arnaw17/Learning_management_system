@@ -1,0 +1,121 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Instructor Dashboard{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/instructordash.css' %}">
+    
+    <style>
+       /* COMMON STYLES */
+:root { 
+    --primary-color: #007bff; 
+    --sidebar-width: 250px; 
+}
+
+/* 1. Base Layout Container */
+body { 
+    font-family: 'Arial', sans-serif; 
+    margin: 0; 
+    background-color: #f4f7f6; 
+}
+.dashboard-container { 
+    display: flex; 
+    width: 100%; 
+}
+
+/* 2. Sidebar Styles (Fixed Position) */
+.sidebar { 
+    width: var(--sidebar-width); 
+    min-height: 100vh; 
+    background-color: #343a40; 
+    color: white; 
+    padding: 20px 0; 
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); 
+    
+    /* CRITICAL: Keep fixed for desktop view */
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    z-index: 1000;
+    transition: transform 0.3s ease; /* For smooth responsiveness */
+}
+
+/* 3. Main Content Area */
+.main-content { 
+    /* CRITICAL: Use margin-left to make space for the fixed sidebar */
+    margin-left: var(--sidebar-width); 
+    flex-grow: 1; 
+    padding-top: 70px; /* Space for the header/top nav */
+    transition: margin-left 0.3s ease;
+}
+
+/* 4. Top Navbar */
+.top-navbar { 
+    position: fixed; 
+    top: 0; 
+    /* CRITICAL: Must also use margin-left or calc to align with the main content */
+    left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width)); /* Fill the remaining width */
+    height: 60px; 
+    background-color: white; 
+    border-bottom: 1px solid #dee2e6; 
+    z-index: 999;
+    transition: left 0.3s ease, width 0.3s ease;
+}
+
+/* 5. DYNAMIC ADJUSTMENT (Media Query for smaller screens) */
+
+@media (max-width: 992px) {
+    /* On smaller screens, allow the main content to take full width */
+    .main-content {
+        margin-left: 0; 
+        padding-top: 60px; /* Adjust padding for full-width header */
+    }
+    
+    /* Hide the sidebar off-screen by default */
+    .sidebar {
+        /* Move the sidebar completely out of view */
+        transform: translateX(-100%); 
+    }
+
+    /* Adjust the top navbar to span the full width */
+    .top-navbar {
+        left: 0;
+        width: 100%; 
+    }
+    
+    /* You would need a button in the top-navbar to toggle a class (e.g., .sidebar-open) 
+       on the body or container to slide the sidebar back into view for mobile navigation.
+    */
+}
+        {% block extra_css %}{% endblock %}
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        
+        {% include "lms/instructor_sidebar.html" %}
+
+        <main class="main-content">
+            
+            {% include "lms/instructor_header.html" %}
+
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="message {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% block content %}
+            {% endblock content %}
+            
+        </main>
+    </div>
+
+</body>
+</html>

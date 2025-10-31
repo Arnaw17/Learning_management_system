@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master JavaScript: The Language of the Web</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- Custom Styles for JavaScript Theme (Blue and Green) --- */
+        :root {
+            --primary-color: #3b82f6; /* Blue-500 */
+            --accent-color: #10b981; /* Emerald-500 */
+            --background-light: #f4f7fa;
+            --text-dark: #2c3e50;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: #ffffff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        h1, h2, h3 {
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h2 strong {
+            color: var(--primary-color);
+        }
+
+        .accent-text {
+            color: var(--accent-color);
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background-color: #e0e0e0;
+            margin: 40px 0;
+        }
+
+        /* --- Buttons (CTA) --- */
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            border-radius: 8px; /* Slightly more rounded */
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 1rem;
+            border: 2px solid transparent;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-primary:hover {
+            background-color: #2b6cb0;
+            box-shadow: 0 5px 20px rgba(59, 130, 246, 0.6);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            margin-left: 15px;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* --- 1. Hero Section --- */
+        .hero {
+            background-color: var(--background-light);
+            padding: 100px 20px;
+            text-align: center;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            max-width: 900px;
+            margin: 0 auto 20px;
+            line-height: 1.2;
+        }
+
+        .hero-content h1 strong {
+            color: var(--primary-color);
+            text-shadow: 1px 1px 1px #00000020;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            margin-bottom: 40px;
+            color: #555;
+        }
+
+        /* --- 2. About JS Section --- */
+        .feature-grid {
+            display: flex;
+            justify-content: space-around;
+            gap: 30px;
+            text-align: center;
+        }
+
+        .feature-card {
+            flex: 1;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-card h3 {
+            color: var(--primary-color);
+        }
+
+        /* --- 3. Career Options Section --- */
+        .section-description {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        .career-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .career-item {
+            background: var(--primary-color);
+            color: white;
+            padding: 25px;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 4px solid var(--accent-color);
+        }
+
+        .career-item .icon {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .career-item h3 {
+            margin-top: 0;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 5px;
+        }
+
+
+        /* --- 4. Course Topics Section --- */
+        .topics-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .topic-card {
+            background-color: var(--background-light);
+            border-left: 5px solid var(--primary-color);
+            padding: 20px;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+
+        .topic-card:hover {
+            background-color: #e8ecf1;
+        }
+
+        .topic-card h3 {
+            color: var(--primary-color);
+            font-size: 1.15rem;
+        }
+
+        .topic-card ul {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 10px;
+            font-size: 0.95rem;
+        }
+
+        .topic-card ul li {
+            padding: 3px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .topic-card ul li::before {
+            content: "✦"; /* Changed bullet style */
+            color: var(--accent-color);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+
+        /* --- Notification Box (Replacement for alert()) --- */
+        #notification-box {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.6);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        #notification-box.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: var(--text-dark);
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        /* --- Responsiveness --- */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.2rem;
+            }
+            .subtitle {
+                font-size: 1rem;
+            }
+            .feature-grid {
+                flex-direction: column;
+            }
+            .btn-secondary {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Master JavaScript Development <span class="accent-text">and Build the Modern Web.</span></h1>
+            <p class="subtitle">The versatile, ubiquitous language powering Front-End, Back-End, Mobile, and everything in between.</p>
+            <div class="cta-buttons">
+                <a href="#course-topics" class="btn btn-primary">EXPLORE COURSE</a>
+                <!-- Updated the onclick to use the custom notification function -->
+                <a href="{% url 'purchase_course' %}" class="btn btn-secondary" id="buy-now-btn">BUY NOW</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="about-python container">
+            <h2>Why JavaScript?</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>🌐 Universal Language</h3>
+                    <p>The **only** language natively understood by all web browsers, essential for all front-end development.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🚀 Full-Stack Capability</h3>
+                    <p>Used for both the client (React, Vue) and server (Node.js), allowing a single language for the entire application.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>✨ Huge Ecosystem</h3>
+                    <p>Supported by the largest collection of frameworks, libraries (NPM), and active community support globally.</p>
+                </div>
+            </div>
+        </section>
+
+        <hr>
+
+        <section class="career-options container">
+            <h2>Your Career Path After JavaScript</h2>
+            <p class="section-description">Mastery of JavaScript immediately qualifies you for high-growth, high-demand roles in every major tech company.</p>
+            <div class="career-grid">
+                <div class="career-item">
+                    <span class="icon">💻</span>
+                    <h3>Front-End Developer</h3>
+                    <p>Building dynamic, responsive user interfaces using frameworks like **React**, Angular, or Vue.</p>
+                </div>
+                <div class="career-item">
+                    <span class="icon">⚙️</span>
+                    <h3>Node.js Back-End Developer</h3>
+                    <p>Creating fast, scalable server-side APIs, microservices, and handling core business logic with **Node.js**.</p>
+                </div>
+                <div class="career-item">
+                    <span class="icon">🔥</span>
+                    <h3>Full-Stack Engineer</h3>
+                    <p>Handling all aspects of development, from the database to the browser (e.g., the MERN or MEAN stack).</p>
+                </div>
+                <div class="career-item">
+                    <span class="icon">📱</span>
+                    <h3>Mobile/Cross-Platform Dev</h3>
+                    <p>Using frameworks like **React Native** to build native mobile apps for iOS and Android using JS.</p>
+                </div>
+            </div>
+        </section>
+
+        <hr>
+
+        <section id="course-topics" class="course-topics container">
+            <h2>What We Cover in the Course</h2>
+            <!-- Topics will be dynamically inserted here by the script -->
+            <div class="topics-container">
+            </div>
+        </section>
+    </main>
+
+    <!-- Notification Box -->
+    <div id="notification-box"></div>
+
+    <footer>
+        <p>&copy; 2025 JS Mastery Program. All rights reserved.</p>
+        <p>A course built for the modern developer.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- 1. JavaScript Topics Data ---
+            const topics = [
+                { 
+                    title: "Module 1: JS Fundamentals & ES5", 
+                    items: [
+                        "Variables, Data Types, and Type Coercion", 
+                        "Operators, Conditionals, and Loops",
+                        "Functions, Scope, and Function Expressions",
+                        "Arrays and Objects (Data Structures)",
+                        "Error Handling (try...catch) and Debugging"
+                    ] 
+                },
+                { 
+                    title: "Module 2: Modern ES6+ Features", 
+                    items: [
+                        "let, const, and Block Scoping", 
+                        "Arrow Functions and lexical 'this'",
+                        "Destructuring (Arrays & Objects)",
+                        "Spread and Rest Operators (`...`)",
+                        "Functional Methods (`map`, `filter`, `reduce`)"
+                    ] 
+                },
+                { 
+                    title: "Module 3: Asynchronous JS & APIs", 
+                    items: [
+                        "The Event Loop and Asynchronous Nature", 
+                        "Mastering Callbacks and Call Hell",
+                        "Working with **Promises** (`.then`, `.catch`)",
+                        "Async/Await for clean network requests",
+                        "Fetching data with the **Fetch API**"
+                    ] 
+                },
+                { 
+                    title: "Module 4: Browser, DOM, & Ecosystem", 
+                    items: [
+                        "The Document Object Model (DOM) Manipulation", 
+                        "Handling Events (click, input, submit)",
+                        "Intro to **Node.js** and NPM",
+                        "Intro to **TypeScript** (Static Typing)",
+                        "Project: Interactive To-Do List Application"
+                    ] 
+                }
+            ];
+
+            // --- 2. Dynamic Topic Insertion Logic ---
+            const topicsContainer = document.querySelector('.topics-container');
+
+            topics.forEach(module => {
+                const card = document.createElement('div');
+                card.className = 'topic-card';
+
+                const title = document.createElement('h3');
+                title.textContent = module.title;
+
+                const ul = document.createElement('ul');
+                module.items.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    ul.appendChild(li);
+                });
+
+                card.appendChild(title);
+                card.appendChild(ul);
+                topicsContainer.appendChild(card);
+            });
+
+            // --- 3. Custom Notification Implementation (Replaces alert()) ---
+            const buyNowButton = document.getElementById('buy-now-btn');
+            const notificationBox = document.getElementById('notification-box');
+
+            function showNotification(message) {
+                notificationBox.textContent = message;
+                notificationBox.classList.add('visible');
+
+                // Hide the notification after 4 seconds
+                setTimeout(() => {
+                    notificationBox.classList.remove('visible');
+                }, 4000);
+            }
+
+            buyNowButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                showNotification('Pre-registration is now open! Redirecting to payment...');
+                // In a real application, you would navigate the user here.
+                // window.location.href = '/checkout';
+            });
+
+            // --- 4. Smooth Scrolling for "EXPLORE COURSE" button ---
+            document.querySelector('.btn-primary').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
